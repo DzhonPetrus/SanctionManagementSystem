@@ -41,6 +41,9 @@ def getAddress(AddressID):
 
 
 # newAddress('A-2018-00137-CM-0', '1', '1', '1', '1', '1')
+
 # updateAddress('A-101', '2', '2', '2', '2', '2')
-# getAddress('A-101')
+
 # deleteAddress('A-101')
+
+getAddress('A-101')

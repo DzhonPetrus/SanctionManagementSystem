@@ -31,4 +31,18 @@ def getAllUser():
     dbCur.execute(sql)
     users = dbCur.fetchall()
     for user in users:
-        print(user)
+        _userID = user[0]
+        _username = user[1]
+        _password = user[2]
+        _role = user[3]
+
+        print(_userID, _username, _password, _role)
+
+
+# newUser('ADMIN', 'ADMIN', 1)
+
+# newUser('STAFF', 'STAFF', 0)
+
+# updateUser(2, 'STAFF2', 'STAFF', 0)
+
+getAllUser()

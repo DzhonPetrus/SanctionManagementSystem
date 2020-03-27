@@ -37,8 +37,13 @@ def getAllSanctionType():
 
 
 # newSanctionType('A-101', 'NEW TYPE')
+
 # newSanctionType('CXZ1', 'ZXCNASDNA')
+
 # updateSanctionType('A1', 'NEW DESCRIPTION')
+
 # getAllSanctionType()
+
 # deleteSanctionType('A1')
-# getAllSanctionType()
+
+getAllSanctionType()

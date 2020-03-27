@@ -22,6 +22,16 @@ def updateSanctionLog(LogID, StudentNo, SanctionCode, _Status, Remarks,
     dbExec(sql)
 
 
+def updateSanctionDuration(LogID, TimeServed):
+    sql = f"UPDATE SANCTIONLOG SET Duration = Duration - '{TimeServed}' WHERE LogID = {LogID}"
+    dbExec(sql)
+
+
+def updateSanctionStatus(LogID, _Status):
+    sql = f"UPDATE SANCTIONLOG SET _Status = '{_Status}' WHERE LogID = {LogID}"
+    dbExec(sql)
+
+
 def deleteSanctionLog(LogID):
     sql = f"DELETE FROM SANCTIONLOG WHERE LogID={LogID}"
     dbExec(sql)
@@ -59,4 +69,4 @@ def getAllSanctionLog():
 
 # deleteSanctionLog(1)
 
-# getAllSanctionLog()
+getAllSanctionLog()

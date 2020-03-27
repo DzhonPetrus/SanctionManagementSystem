@@ -38,7 +38,11 @@ def getAllSanctions():
 
 
 # newSanction('sc1', 'A-101', 'BRUH')
+
 # newSanction('sc2', 'A-101', 'BRUH')
+
 # updateSanction('sc1', 'A-101', 'NEW DESCRIPTION')
+
 # deleteSanction('sc2')
-# getAllSanctions()
+
+getAllSanctions()

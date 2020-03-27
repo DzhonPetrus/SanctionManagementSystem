@@ -1,4 +1,5 @@
 import connector as DB
+import SanctionLog
 
 dbCur = DB.Connection.cursor()
 
@@ -16,9 +17,11 @@ def newService(LogID):
     dbExec(sql)
 
 
-def updateService(ServiceID):
+def updateService(ServiceID, LogID):
     sql = f"UPDATE SERVICE SET TimeOut=CURTIME() WHERE ServiceID='{ServiceID}'"
     dbExec(sql)
+    TimeServed = (_TimeOut - _TimeIn)
+    SanctionLog.updateSanctionDuration(LogID, TimeServed)
 
 
 def deleteService(ServiceID):
@@ -36,13 +39,14 @@ def getAllService():
         _TimeIn = service[2]
         _TimeOut = service[3]
         _ServiceDate = service[4]
-        print(_ServiceID, _LogID, _TimeIn, _TimeOut, _ServiceDate)
+
+        TimeServed = _TimeOut - _TimeIn
+        print(_ServiceID, _LogID, _TimeIn, _TimeOut, _ServiceDate, TimeServed)
 
 
 # newService(1)
 
-# updateService(1)
+# updateService(1, 1)
 
-deleteService(2)
-
+# deleteService(2)
 getAllService()

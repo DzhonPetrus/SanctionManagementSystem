@@ -13,7 +13,7 @@ def dbExec(sql):
 
 def newStudent(StudentNo, FName, MName, LName, XTName, ContactNo, Email,
                DateOfBirth, Course, Section, SchoolYear):
-    AddressID = "A-" + StudentNo
+    AddressID = "A-" + StudentNo[:10]
     sql = f"INSERT INTO STUDENT(StudentNo, FName, MName, LName, XTName, ContactNo, Email, AddressID, DateOfBirth, Course, Section, SchoolYear) VALUES('{StudentNo}', '{FName}', '{MName}', '{LName}', '{XTName}', {ContactNo}, '{Email}', '{AddressID}', '{DateOfBirth}', '{Course}', '{Section}', {SchoolYear});"
     dbExec(sql)
 
@@ -60,4 +60,5 @@ def getAllStudent():
 #               '1', 2018)
 
 # deleteUser('2018-00137-CM-0', 'A-2018-00137-CM-0')
-# getAllStudent()
+
+getAllStudent()
