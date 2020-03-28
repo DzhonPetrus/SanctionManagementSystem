@@ -62,8 +62,11 @@ def getAllSanctionLog():
             _Duration,
         )
 
+    dbCur.close()
+
 
 # newSanctionLog('2018-00137-CM-0', 'sc1', 'BAD', '05:00:00')
+# newSanctionLog('2018-00137-CM-0', 'sc2', 'BAD', '05:00:00')
 
 # updateSanctionLog(1, '2018-00137-CM-0', 'sc1', 'PARTIAL', 'BAD', '03:00:00')
 

@@ -37,13 +37,13 @@ def getAddress(AddressID):
         _Brgy = user[3]
         _City = user[4]
         _ZipCode = user[5]
-    print(_AddressID, _UnitNo, _StreetNo, _Brgy, _City, _ZipCode)
+        print(_AddressID, _UnitNo, _StreetNo, _Brgy, _City, _ZipCode)
 
 
-# newAddress('A-2018-00137-CM-0', '1', '1', '1', '1', '1')
+# newAddress('A-2018-00137', '1', '1', '1', '1', '1')
 
-# updateAddress('A-101', '2', '2', '2', '2', '2')
+# updateAddress('A-2018-00137', '2', '2', '2', '2', '2')
 
-# deleteAddress('A-101')
+# deleteAddress('A-2018-00137')
 
-getAddress('A-101')
+getAddress('A-2018-00137')
