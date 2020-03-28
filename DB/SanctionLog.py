@@ -23,8 +23,8 @@ def updateSanctionLog(LogID, StudentNo, SanctionCode, _Status, Remarks,
 
 
 def updateSanctionDuration(LogID, TimeServed):
-    sql = f"UPDATE SANCTIONLOG SET Duration = Duration - '{TimeServed}' WHERE LogID = {LogID}"
-    dbExec(sql)
+    return f"UPDATE SANCTIONLOG SET Duration = Duration - '{TimeServed}' WHERE LogID = {LogID}"
+    # dbExec(sql)
 
 
 def updateSanctionStatus(LogID, _Status):

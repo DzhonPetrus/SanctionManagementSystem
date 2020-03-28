@@ -1,6 +1,6 @@
+from datetime import date, datetime
 import connector as DB
 import SanctionLog
-import datetime
 
 dbCur = DB.Connection.cursor()
 
@@ -22,9 +22,8 @@ def updateService(ServiceID, LogID):
     sql = f"UPDATE SERVICE SET TimeOut=CURTIME() WHERE ServiceID='{ServiceID}'"
     dbExec(sql)
     _TimeIn = getServiceTimeIn(ServiceID)
-    _TimeOut = datetime.datetime.now().time()
-    print("TIME OUT", _TimeOut, "TIME IN", _TimeIn)
-    TimeServed = (_TimeOut - _TimeIn)
+    _TimeOut = datetime.combine(date.today(), datetime.now().time())
+    TimeServed = (_TimeOut - _TimeIn).time()
     SanctionLog.updateSanctionDuration(LogID, TimeServed)
 
 
@@ -60,9 +59,9 @@ def getServiceTimeIn(ServiceID):
         return record[0]
 
 
-# newService(1)
+# newService(2)
 
-updateService(1, 4)
+updateService(8, 2)
 
 # deleteService(2)
 getAllService()
