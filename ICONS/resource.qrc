@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="ICONS">
+    <file>browser.png</file>
+    <file>browser2.png</file>
+    <file>login 2.png</file>
+    <file>login.png</file>
+    <file>pencil.png</file>
+  </qresource>
+</RCC>

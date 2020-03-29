@@ -1,3 +1,4 @@
-/.vscode/*
-	   /.idea/*
-	   /DB/__pycache__/*
+.vscode/*
+	  .idea/*
+	  DB/__pycache__/*
+	  __pycache__/*

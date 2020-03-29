@@ -38,6 +38,15 @@ def getAllUser():
 
         print(_userID, _username, _password, _role)
 
+def checkExistingUser(username,password):
+    sql = f"SELECT * FROM _USER WHERE _Username='{username}' AND _Password='{password}'"
+    dbCur.execute(sql)
+    row = dbCur.fetchone()
+    if row == None:
+        return False
+    else:
+        return row
+
 
 # newUser('ADMIN', 'ADMIN', 1)
 
@@ -46,3 +55,4 @@ def getAllUser():
 # updateUser(2, 'STAFF2', 'STAFF', 0)
 
 getAllUser()
+
