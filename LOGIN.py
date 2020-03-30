@@ -9,6 +9,8 @@
 import ICONS.resource_rc
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
+import sys
+
 
 class Ui_wndwLogin(object):
     def setupUi(self, wndwLogin):
@@ -113,17 +115,16 @@ class Ui_wndwLogin(object):
         self.retranslateUi(wndwLogin)
         QtCore.QMetaObject.connectSlotsByName(wndwLogin)
 
-
     def retranslateUi(self, wndwLogin):
         _translate = QtCore.QCoreApplication.translate
         wndwLogin.setWindowTitle(
             _translate("wndwLogin", "Sanction Management System - LOGIN"))
         self.btnLogin.setText(_translate("wndwLogin", "LOGIN"))
         self.btnExit.setText(_translate("wndwLogin", "EXIT"))
-        self.txtUsername.setPlaceholderText(_translate("wndwLogin", "Username"))
-        self.txtPassword.setPlaceholderText(_translate("wndwLogin", "Password"))
-
-
+        self.txtUsername.setPlaceholderText(_translate("wndwLogin",
+                                                       "Username"))
+        self.txtPassword.setPlaceholderText(_translate("wndwLogin",
+                                                       "Password"))
 
         #CUSTOM CODE
         self.btnExit.clicked.connect(self.confirmationExit)
@@ -137,31 +138,37 @@ class Ui_wndwLogin(object):
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msg.setDefaultButton(QMessageBox.No)
         x = msg.exec_()
-        if(x==16384):
-            self.close()
+        if (x == 16384):
+            sys.exit()
 
     def Login(self):
         import connector
         import DB.User as dbUser
 
-        self.txtUsername.setStyleSheet("#txtUsername{background-color:rgba(255,255,255,.8);}")
-        self.txtPassword.setStyleSheet("#txtPassword{background-color:rgba(255,255,255,.8);}")
+        self.txtUsername.setStyleSheet(
+            "#txtUsername{background-color:rgba(255,255,255,.8);}")
+        self.txtPassword.setStyleSheet(
+            "#txtPassword{background-color:rgba(255,255,255,.8);}")
         username = self.txtUsername.toPlainText()
         password = self.txtPassword.toPlainText()
         if username == '':
             self.txtUsername.setPlaceholderText('PLEASE ENTER A USERNAME')
-            self.txtUsername.setStyleSheet("#txtUsername{background-color:rgba(255,112,80,.7);}")
+            self.txtUsername.setStyleSheet(
+                "#txtUsername{background-color:rgba(255,112,80,.7);}")
             self.txtUsername.setFocus()
         elif password == '':
             self.txtPassword.setPlaceholderText('PLEASE ENTER A PASSWORD')
-            self.txtPassword.setStyleSheet("#txtPassword{background-color:rgba(255,112,80,.7);}")
+            self.txtPassword.setStyleSheet(
+                "#txtPassword{background-color:rgba(255,112,80,.7);}")
             self.txtUsername.setFocus()
         else:
-            exist = dbUser.checkExistingUser(username,password)
+            exist = dbUser.checkExistingUser(username, password)
             if not exist:
                 msg = QMessageBox()
                 msg.setWindowTitle("Sanction Management System - Login Failed")
-                msg.setText("INVALID CREDENTIALS!\nPlease Enter correct Username and Password!")
+                msg.setText(
+                    "INVALID CREDENTIALS!\nPlease Enter correct Username and Password!"
+                )
                 msg.setIcon(QMessageBox.Warning)
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.setDefaultButton(QMessageBox.Ok)
@@ -171,6 +178,4 @@ class Ui_wndwLogin(object):
             else:
                 _userID = exist[0]
                 _userRole = exist[3]
-                print("id:",_userID,"role: ", _userRole)
-
-
+                print("id:", _userID, "role: ", _userRole)

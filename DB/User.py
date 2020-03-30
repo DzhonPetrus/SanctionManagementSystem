@@ -29,16 +29,10 @@ def deleteUser(userID):
 def getAllUser():
     sql = "SELECT * FROM _USER;"
     dbCur.execute(sql)
-    users = dbCur.fetchall()
-    for user in users:
-        _userID = user[0]
-        _username = user[1]
-        _password = user[2]
-        _role = user[3]
+    return dbCur.fetchall()
 
-        print(_userID, _username, _password, _role)
 
-def checkExistingUser(username,password):
+def checkExistingUser(username, password):
     sql = f"SELECT * FROM _USER WHERE _Username='{username}' AND _Password='{password}'"
     dbCur.execute(sql)
     row = dbCur.fetchone()
@@ -55,4 +49,3 @@ def checkExistingUser(username,password):
 # updateUser(2, 'STAFF2', 'STAFF', 0)
 
 getAllUser()
-
