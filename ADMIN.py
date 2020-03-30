@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 import connector
 import DB.User as dbUser
+from dialogUser import Ui_dgUser
 
 
 class Ui_wndwAdmin(object):
@@ -1060,7 +1061,13 @@ class Ui_wndwAdmin(object):
         # CUSTOM CODE
 
         self.userClicked()
+
+        self.tblUser.cellClicked.connect(self.tblUserClicked)
         self.btnUser.clicked.connect(self.userClicked)
+        self.btnUserAdd.clicked.connect(self.userAdd)
+        self.btnUserUpdate.clicked.connect(self.userUpdate)
+        self.btnUserDelete.clicked.connect(self.userDelete)
+
         self.btnAddress.clicked.connect(self.addressClicked)
         self.btnSanction.clicked.connect(self.sanctionClicked)
         self.btnSanctionType.clicked.connect(self.typeClicked)
@@ -1068,6 +1075,17 @@ class Ui_wndwAdmin(object):
         self.btnStudent.clicked.connect(self.studentClicked)
         self.btnService.clicked.connect(self.serviceClicked)
         self.btnLogout.clicked.connect(self.confirmationLogout)
+
+##############   USER   #######################
+
+    def tblUserClicked(self):
+        self.r = self.tblUser.currentRow()
+        if (self.tblUser.item(self.r, 0) != None):
+            self.btnUserUpdate.setEnabled(True)
+            self.btnUserDelete.setEnabled(True)
+        else:
+            self.btnUserUpdate.setEnabled(False)
+            self.btnUserDelete.setEnabled(False)
 
     def userClicked(self):
         self.resetFormState()
@@ -1093,9 +1111,54 @@ class Ui_wndwAdmin(object):
                 self.tblUser.setItem(row, 3, QTableWidgetItem(str(_role)))
                 row = row + 1
 
-                print(_userID, _username, _password, _role)
         else:
             print("NO USER")
+
+    def userAdd(self):
+        self._userID = ''
+        self._username = ''
+        self._password = ''
+        self._role = 0
+        self.dgUser = QtWidgets.QDialog()
+        self.dg = Ui_dgUser(self._userID, self._username, self._password,
+                            self._role)
+        self.dg.setupUi(self.dgUser)
+        self.dgUser.show()
+        x = self.dgUser.exec_()
+        if x == 0:
+            self.userClicked()
+
+    def userUpdate(self):
+        self._userID = self.tblUser.item(self.r, 0).text()
+        self._username = self.tblUser.item(self.r, 1).text()
+        self._password = self.tblUser.item(self.r, 2).text()
+        self._role = self.tblUser.item(self.r, 3).text()
+        self.dgUser = QtWidgets.QDialog()
+        self.dg = Ui_dgUser(self._userID, self._username, self._password,
+                            self._role)
+        self.dg.setupUi(self.dgUser)
+        self.dgUser.show()
+        x = self.dgUser.exec_()
+        if x == 0:
+            self.userClicked()
+
+    def userDelete(self):
+        self._userID = self.tblUser.item(self.r, 0).text()
+        msg = self.confirmationBox()
+        msg.setText(
+            f"Are you sure you want to Delete User with userID='{self._userID}'?"
+        )
+        ans = msg.exec_()
+        if (ans == 16384):
+            dbUser.deleteUser(self._userID)
+            info = self.infoBox()
+            info.setText(
+                f"User with userID='{self._userID}' successfully deleted!")
+            info.exec_()
+            self.userClicked()
+
+
+##############   ADDRESS   #######################
 
     def addressClicked(self):
         self.resetFormState()
@@ -1128,15 +1191,29 @@ class Ui_wndwAdmin(object):
         self.btnService.setEnabled(False)
 
     def confirmationLogout(self):
+        msg = confirmationBox()
+        msg.setDefaultButton(QMessageBox.No)
+        ans = msg.exec_()
+        if (ans == 16384):
+            sys.exit()
+
+    def infoBox(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Sanction Management System - Information")
+        msg.setText("SOME INFO HERE!")
+        msg.setIcon(QMessageBox.Information)
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.setDefaultButton(QMessageBox.Ok)
+        return msg
+
+    def confirmationBox(self):
         msg = QMessageBox()
         msg.setWindowTitle("Sanction Management System - Confirmation")
         msg.setText("Are you sure you want to Logout?")
         msg.setIcon(QMessageBox.Question)
         msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
         msg.setDefaultButton(QMessageBox.No)
-        x = msg.exec_()
-        if (x == 16384):
-            sys.exit()
+        return msg
 
     def resetFormState(self):
         self.frmUser.setVisible(False)
@@ -1153,7 +1230,16 @@ class Ui_wndwAdmin(object):
         self.btnSanctionLog.setEnabled(True)
         self.btnStudent.setEnabled(True)
         self.btnService.setEnabled(True)
+        self.btnUserUpdate.setEnabled(False)
+        self.btnUserDelete.setEnabled(False)
 
+        self.tblUser.clear()
+        self.tblAddress.clear()
+        self.tblSanction.clear()
+        self.tblType.clear()
+        self.tblLog.clear()
+        self.tblStudent.clear()
+        self.tblService.clear()
 
 if __name__ == "__main__":
     import sys

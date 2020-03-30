@@ -48,4 +48,4 @@ def checkExistingUser(username, password):
 
 # updateUser(2, 'STAFF2', 'STAFF', 0)
 
-getAllUser()
+# getAllUser()
