@@ -9,11 +9,13 @@
 import ICONS.resource_rc
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
+from ADMIN import Ui_wndwAdmin
 import sys
 
 
 class Ui_wndwLogin(object):
     def setupUi(self, wndwLogin):
+        self.wndwLogin = wndwLogin
         wndwLogin.setObjectName("wndwLogin")
         wndwLogin.setWindowModality(QtCore.Qt.NonModal)
         wndwLogin.resize(1024, 768)
@@ -126,7 +128,7 @@ class Ui_wndwLogin(object):
         self.txtPassword.setPlaceholderText(_translate("wndwLogin",
                                                        "Password"))
 
-        #CUSTOM CODE
+        # CUSTOM CODE
         self.btnExit.clicked.connect(self.confirmationExit)
         self.btnLogin.clicked.connect(self.Login)
 
@@ -178,4 +180,10 @@ class Ui_wndwLogin(object):
             else:
                 _userID = exist[0]
                 _userRole = exist[3]
-                print("id:", _userID, "role: ", _userRole)
+                if (_userRole == 0):
+
+                    self.frmADMIN = QtWidgets.QMainWindow()
+                    self.admin = Ui_wndwAdmin(self.wndwLogin, _userID)
+                    self.admin.setupUi(self.frmADMIN)
+                    self.frmADMIN.show()
+                    self.wndwLogin.hide()

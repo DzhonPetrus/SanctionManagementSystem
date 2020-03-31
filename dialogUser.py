@@ -21,6 +21,7 @@ class Ui_dgUser(object):
         self._role = role
 
     def setupUi(self, dgUser):
+        self.dgUser = dgUser
         dgUser.setObjectName("dgUser")
         dgUser.resize(800, 600)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed,
@@ -197,7 +198,7 @@ class Ui_dgUser(object):
                 msg.setText(
                     f"Update successful!\nUser with userID={self._userID} ")
                 msg.exec_()
-                print("UPDATE")
+            self.dgUser.hide()
         else:
             msg = self.msgBox()
             msg.setText("Please fill up the form!")

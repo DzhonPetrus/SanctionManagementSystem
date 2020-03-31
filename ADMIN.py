@@ -15,7 +15,12 @@ from dialogUser import Ui_dgUser
 
 
 class Ui_wndwAdmin(object):
+    def __init__(self, wndwLogin, userID):
+        self.wndwLogin = wndwLogin
+        self._currentUserID = userID
+
     def setupUi(self, wndwAdmin):
+        self.wndwAdmin = wndwAdmin
         wndwAdmin.setObjectName("wndwAdmin")
         wndwAdmin.setWindowModality(QtCore.Qt.NonModal)
         wndwAdmin.resize(1280, 768)
@@ -1088,6 +1093,10 @@ class Ui_wndwAdmin(object):
             self.btnUserDelete.setEnabled(False)
 
     def userClicked(self):
+        currentUser = dbUser.getUserByID(self._currentUserID)
+        self._currentUsername = currentUser[1]
+        self.lblCurrentUser.setText("<html><b>" + self._currentUsername +
+                                    "</b></html>")
         self.resetFormState()
         self.frmUser.setVisible(True)
         self.btnUser.setEnabled(False)
@@ -1191,11 +1200,12 @@ class Ui_wndwAdmin(object):
         self.btnService.setEnabled(False)
 
     def confirmationLogout(self):
-        msg = confirmationBox()
+        msg = self.confirmationBox()
         msg.setDefaultButton(QMessageBox.No)
         ans = msg.exec_()
         if (ans == 16384):
-            sys.exit()
+            self.wndwAdmin.hide()
+            self.wndwLogin.show()
 
     def infoBox(self):
         msg = QMessageBox()

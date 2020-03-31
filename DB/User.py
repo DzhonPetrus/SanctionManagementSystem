@@ -32,11 +32,17 @@ def getAllUser():
     return dbCur.fetchall()
 
 
+def getUserByID(userID):
+    sql = f"SELECT * FROM _USER WHERE userID='{userID}';"
+    dbCur.execute(sql)
+    return dbCur.fetchone()
+
+
 def checkExistingUser(username, password):
     sql = f"SELECT * FROM _USER WHERE _Username='{username}' AND _Password='{password}'"
     dbCur.execute(sql)
     row = dbCur.fetchone()
-    if row == None:
+    if row is None:
         return False
     else:
         return row
