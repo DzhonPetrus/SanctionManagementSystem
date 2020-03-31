@@ -38,6 +38,12 @@ def getUserByID(userID):
     return dbCur.fetchone()
 
 
+def getUserByUsername(username):
+    sql = f"SELECT * FROM _USER WHERE _username='{username}';"
+    dbCur.execute(sql)
+    return dbCur.fetchone()
+
+
 def checkExistingUser(username, password):
     sql = f"SELECT * FROM _USER WHERE _Username='{username}' AND _Password='{password}'"
     dbCur.execute(sql)

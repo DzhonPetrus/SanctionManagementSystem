@@ -11,7 +11,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 import connector
 import DB.User as dbUser
+import DB.Student as dbStudent
 from dialogUser import Ui_dgUser
+from dialogStudent import Ui_dgStud
 
 
 class Ui_wndwAdmin(object):
@@ -1077,7 +1079,13 @@ class Ui_wndwAdmin(object):
         self.btnSanction.clicked.connect(self.sanctionClicked)
         self.btnSanctionType.clicked.connect(self.typeClicked)
         self.btnSanctionLog.clicked.connect(self.logClicked)
+
+        self.tblStudent.cellClicked.connect(self.tblStudentClicked)
         self.btnStudent.clicked.connect(self.studentClicked)
+        self.btnStudentAdd.clicked.connect(self.studentAdd)
+        self.btnStudentUpdate.clicked.connect(self.studentUpdate)
+        self.btnStudentDelete.clicked.connect(self.studentDelete)
+
         self.btnService.clicked.connect(self.serviceClicked)
         self.btnLogout.clicked.connect(self.confirmationLogout)
 
@@ -1121,7 +1129,9 @@ class Ui_wndwAdmin(object):
                 row = row + 1
 
         else:
-            print("NO USER")
+            msg = self.msgBox()
+            msg.setText("NO USER FOUND")
+            msg.exec_()
 
     def userAdd(self):
         self._userID = ''
@@ -1132,6 +1142,7 @@ class Ui_wndwAdmin(object):
         self.dg = Ui_dgUser(self._userID, self._username, self._password,
                             self._role)
         self.dg.setupUi(self.dgUser)
+        self.dg.txtUsername.setEnabled(True)
         self.dgUser.show()
         x = self.dgUser.exec_()
         if x == 0:
@@ -1146,6 +1157,7 @@ class Ui_wndwAdmin(object):
         self.dg = Ui_dgUser(self._userID, self._username, self._password,
                             self._role)
         self.dg.setupUi(self.dgUser)
+        self.dg.txtUsername.setEnabled(False)
         self.dgUser.show()
         x = self.dgUser.exec_()
         if x == 0:
@@ -1166,7 +1178,6 @@ class Ui_wndwAdmin(object):
             info.exec_()
             self.userClicked()
 
-
 ##############   ADDRESS   #######################
 
     def addressClicked(self):
@@ -1174,30 +1185,159 @@ class Ui_wndwAdmin(object):
         self.frmAddress.setVisible(True)
         self.btnAddress.setEnabled(False)
 
+##############   SANCTION   #######################
+
     def sanctionClicked(self):
         self.resetFormState()
         self.frmSanction.setVisible(True)
         self.btnSanction.setEnabled(False)
+
+##############   SANCTION TYPE   #######################
 
     def typeClicked(self):
         self.resetFormState()
         self.frmSanctionType.setVisible(True)
         self.btnSanctionType.setEnabled(False)
 
+##############   SANCTION LOG   #######################
+
     def logClicked(self):
         self.resetFormState()
         self.frmSanctionLog.setVisible(True)
         self.btnSanctionLog.setEnabled(False)
 
+##############   STUDENT   #######################
+
     def studentClicked(self):
         self.resetFormState()
         self.frmStudent.setVisible(True)
         self.btnStudent.setEnabled(False)
+        students = dbStudent.getAllStudent()
+        if students != None:
+            self.tblStudent.setColumnCount(12)
+            self.tblStudent.setHorizontalHeaderLabels([
+                'StudentNo', 'FName', 'MName', 'LName', 'XTName', 'ContactNo',
+                'AddressID', 'Email', 'DateOfBirth', 'Course', 'Section',
+                'SchoolYear'
+            ])
+            row = 0
+
+            for student in students:
+                self._StudentNo = student[0]
+                self._FName = student[1]
+                self._MName = student[2]
+                self._LName = student[3]
+                self._XTName = student[4]
+                self._ContactNo = student[5]
+                self._Email = student[6]
+                self._AddressID = student[7]
+                self._DateOfBirth = student[8]
+                self._Course = student[9]
+                self._Section = student[10]
+                self._SchoolYear = student[11]
+
+                self.tblStudent.insertRow(row)
+                self.tblStudent.setItem(row, 0,
+                                        QTableWidgetItem(str(self._StudentNo)))
+                self.tblStudent.setItem(row, 1, QTableWidgetItem(self._FName))
+                self.tblStudent.setItem(row, 2, QTableWidgetItem(self._MName))
+                self.tblStudent.setItem(row, 3, QTableWidgetItem(self._LName))
+                self.tblStudent.setItem(row, 4, QTableWidgetItem(self._XTName))
+                self.tblStudent.setItem(row, 5,
+                                        QTableWidgetItem(str(self._ContactNo)))
+                self.tblStudent.setItem(row, 6,
+                                        QTableWidgetItem(self._AddressID))
+                self.tblStudent.setItem(row, 7, QTableWidgetItem(self._Email))
+                self.tblStudent.setItem(
+                    row, 8, QTableWidgetItem(str(self._DateOfBirth)))
+                self.tblStudent.setItem(row, 9, QTableWidgetItem(self._Course))
+                self.tblStudent.setItem(row, 10,
+                                        QTableWidgetItem(str(self._Section)))
+                self.tblStudent.setItem(
+                    row, 11, QTableWidgetItem(str(self._SchoolYear)))
+
+                row = row + 1
+                self.tblStudent.setVisible(True)
+
+        else:
+            msg = self.msgBox()
+            msg.setText("NO STUDENT FOUND")
+            msg.exec_()
+
+    def tblStudentClicked(self):
+        self.r = self.tblStudent.currentRow()
+        if (self.tblStudent.item(self.r, 0) != None):
+            self.btnStudentUpdate.setEnabled(True)
+            self.btnStudentDelete.setEnabled(True)
+        else:
+            self.btnStudentUpdate.setEnabled(False)
+            self.btnStudentDelete.setEnabled(False)
+
+    def studentInit(self):
+        self._StudentNo = ''
+        self._FName = ''
+        self._MName = ''
+        self._LName = ''
+        self._XTName = ''
+        self._ContactNo = 0
+        self._Email = ''
+        self._AddressID = 0
+        self._DateOfBirth = ''
+        self._Course = ''
+        self._Section = ''
+        self._SchoolYear = 0
+        self._student = [
+            self._StudentNo, self._FName, self._MName, self._LName,
+            self._XTName, self._ContactNo, self._Email, self._AddressID,
+            self._DateOfBirth, self._Course, self._Section, self._SchoolYear
+        ]
+
+    def studentAdd(self):
+        self.dgStudent = QtWidgets.QDialog()
+        self.dgstud = Ui_dgStud([])
+        self.dgstud.setupUi(self.dgStudent)
+        # self.dgstud.txtUsername.setEnabled(True)
+        self.dgStudent.show()
+        x = self.dgStudent.exec_()
+        if x == 0:
+            self.studentClicked()
+
+    def studentUpdate(self):
+        self._StudentNo = self.tblStudent.item(self.r, 0).text()
+
+        self.dgStudent = QtWidgets.QDialog()
+        self.dgstud = Ui_dgStud([self._StudentNo])
+        self.dgstud.setupUi(self.dgStudent)
+        self.dgStudent.show()
+        x = self.dgStudent.exec_()
+        if x == 0:
+            self.studentClicked()
+
+    def studentDelete(self):
+        self._StudentNo = self.tblStudent.item(self.r, 0).text()
+        msg = self.confirmationBox()
+        msg.setText(
+            f"Are you sure you want to Delete Student with StudentNo='{self._StudentNo}'?"
+        )
+        ans = msg.exec_()
+        if (ans == 16384):
+            dbStudent.deleteStudent(self._StudentNo)
+            info = self.infoBox()
+            info.setText(
+                f"Student with StudetNo='{self._StudentNo}' successfully deleted!"
+            )
+            info.exec_()
+            self.userClicked()
+
+##############   SERVICE   #######################
 
     def serviceClicked(self):
         self.resetFormState()
         self.frmService.setVisible(True)
         self.btnService.setEnabled(False)
+
+
+##############   OTHER FUNCTIONS   #######################
 
     def confirmationLogout(self):
         msg = self.confirmationBox()
@@ -1250,12 +1390,3 @@ class Ui_wndwAdmin(object):
         self.tblLog.clear()
         self.tblStudent.clear()
         self.tblService.clear()
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    wndwAdmin = QtWidgets.QMainWindow()
-    ui = Ui_wndwAdmin()
-    ui.setupUi(wndwAdmin)
-    wndwAdmin.show()
-    sys.exit(app.exec_())

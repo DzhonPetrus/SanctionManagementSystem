@@ -131,6 +131,7 @@ class Ui_wndwLogin(object):
         # CUSTOM CODE
         self.btnExit.clicked.connect(self.confirmationExit)
         self.btnLogin.clicked.connect(self.Login)
+        self.txtUsername.setFocus()
 
     def confirmationExit(self):
         msg = QMessageBox()
@@ -175,8 +176,7 @@ class Ui_wndwLogin(object):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.setDefaultButton(QMessageBox.Ok)
                 msg.exec_()
-                self.txtPassword.clear()
-                self.txtPassword.setFocus()
+                self.clearPassword()
             else:
                 _userID = exist[0]
                 _userRole = exist[3]
@@ -187,3 +187,9 @@ class Ui_wndwLogin(object):
                     self.admin.setupUi(self.frmADMIN)
                     self.frmADMIN.show()
                     self.wndwLogin.hide()
+
+                    self.clearPassword()
+
+    def clearPassword(self):
+        self.txtPassword.setText('')
+        self.txtPassword.setFocus()

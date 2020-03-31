@@ -14,6 +14,8 @@ def dbExec(sql):
 def newStudent(StudentNo, FName, MName, LName, XTName, ContactNo, Email,
                DateOfBirth, Course, Section, SchoolYear):
     AddressID = "A-" + StudentNo[:10]
+    sql = f"INSERT INTO ADDRESS(AddressID) VALUES('{ AddressID }');"
+    dbExec(sql)
     sql = f"INSERT INTO STUDENT(StudentNo, FName, MName, LName, XTName, ContactNo, Email, AddressID, DateOfBirth, Course, Section, SchoolYear) VALUES('{StudentNo}', '{FName}', '{MName}', '{LName}', '{XTName}', {ContactNo}, '{Email}', '{AddressID}', '{DateOfBirth}', '{Course}', '{Section}', {SchoolYear});"
     dbExec(sql)
 
@@ -31,25 +33,31 @@ def deleteUser(StudentNo, AddressNo):
     dbExec(sql)
 
 
+def getStudentByNo(StudentNo):
+    sql = f"SELECT * FROM STUDENT WHERE StudentNo='{StudentNo}';"
+    dbCur.execute(sql)
+    return dbCur.fetchone()
+
+
 def getAllStudent():
     sql = "SELECT * FROM STUDENT;"
     dbCur.execute(sql)
-    students = dbCur.fetchall()
-    for student in students:
-        _StudentNo = student[0]
-        _FName = student[1]
-        _MName = student[2]
-        _LName = student[3]
-        _XTName = student[4]
-        _ContactNo = student[5]
-        _Email = student[6]
-        _DateOfBirth = student[7]
-        _Course = student[8]
-        _Section = student[9]
-        _SchoolYear = student[10]
+    return dbCur.fetchall()
+    # for student in students:
+    #     _StudentNo = student[0]
+    #     _FName = student[1]
+    #     _MName = student[2]
+    #     _LName = student[3]
+    #     _XTName = student[4]
+    #     _ContactNo = student[5]
+    #     _Email = student[6]
+    #     _DateOfBirth = student[7]
+    #     _Course = student[8]
+    #     _Section = student[9]
+    #     _SchoolYear = student[10]
 
-        print(_StudentNo, _FName, _MName, _LName, _XTName, _ContactNo, _Email,
-              _DateOfBirth, _Course, _Section, _SchoolYear)
+    # print(_StudentNo, _FName, _MName, _LName, _XTName, _ContactNo, _Email,
+    #       _DateOfBirth, _Course, _Section, _SchoolYear)
 
 
 # newStudent('2018-00137-CM-0', 'Juan', 'Dalisay', 'Pedro', 'Sr', '09196429771',
@@ -61,4 +69,4 @@ def getAllStudent():
 
 # deleteUser('2018-00137-CM-0', 'A-2018-00137-CM-0')
 
-getAllStudent()
+# getAllStudent()

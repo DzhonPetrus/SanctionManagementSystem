@@ -144,6 +144,22 @@ class Ui_dgUser(object):
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole,
                                   self.btnPrimary)
 
+        self.btnCancel = QtWidgets.QPushButton(self.formLayoutWidget)
+        self.btnCancel.setMinimumSize(QtCore.QSize(100, 40))
+        font = QtGui.QFont()
+        font.setFamily("Open Sans")
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setItalic(False)
+        font.setWeight(75)
+        self.btnCancel.setFont(font)
+        self.btnCancel.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btnCancel.setMouseTracking(False)
+        self.btnCancel.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.btnCancel.setObjectName("btnCancel")
+        self.formLayout.setWidget(5, QtWidgets.QFormLayout.FieldRole,
+                                  self.btnCancel)
+
         self.retranslateUi(dgUser)
         QtCore.QMetaObject.connectSlotsByName(dgUser)
 
@@ -160,10 +176,11 @@ class Ui_dgUser(object):
         self.cbRole.setItemText(0, _translate("dgUser", "ADMIN"))
         self.cbRole.setItemText(1, _translate("dgUser", "STAFF"))
         self.btnPrimary.setText(_translate("dgUser", "ADD"))
+        self.btnCancel.setText(_translate("dgUser", "CANCEL"))
 
         ##### CUSTOM #####
+        self.btnCancel.clicked.connect(self.confirmExit)
 
-        self.clearForm()
         if self._userID != '':
             self.txtUserID.setText(self._userID)
             self.txtUsername.setText(self._username)
@@ -186,21 +203,25 @@ class Ui_dgUser(object):
 
         if self._username != '' and self._password != '':
             if self._ACTION == "ADD":
-                dbUser.newUser(self._username, self._password, self._role)
                 msg = self.msgBox()
-                msg.setText(f"New user '{self._username}' Added!")
-                msg.exec_()
-                self.clearForm()
+                if dbUser.getUserByUsername(self._username) is None:
+                    dbUser.newUser(self._username, self._password, self._role)
+                    msg.setText(f"New user '{self._username}' Added!")
+                    self.clearForm()
+                else:
+                    msg.setText(f"USER ALREADY EXIST!")
+                    msg.setIcon(QMessageBox.Warning)
             else:
                 dbUser.updateUser(self._userID, self._username, self._password,
                                   self._role)
                 msg = self.msgBox()
                 msg.setText(
                     f"Update successful!\nUser with userID={self._userID} ")
-                msg.exec_()
-            self.dgUser.hide()
+                self.clearForm()
+            msg.exec_()
         else:
             msg = self.msgBox()
+            msg.setIcon(QMessageBox.Warning)
             msg.setText("Please fill up the form!")
             msg.exec_()
 
@@ -211,6 +232,17 @@ class Ui_dgUser(object):
         msg.setStandardButtons(QMessageBox.Ok)
         msg.setDefaultButton(QMessageBox.Ok)
         return msg
+
+    def confirmExit(self):
+        msg = self.msgBox()
+        msg.setWindowTitle("Sanction Management System - Confirmation")
+        msg.setText("Are you sure you want to cancel transaction?")
+        msg.setIcon(QMessageBox.Question)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        msg.setDefaultButton(QMessageBox.No)
+        ans = msg.exec_()
+        if (ans == 16384):
+            self.dgUser.hide()
 
     def clearForm(self):
         self.txtUserID.setText('')
